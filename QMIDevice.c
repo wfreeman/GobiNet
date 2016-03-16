@@ -2308,7 +2308,7 @@ long UserspaceunlockedIOCTL(
    if (IsDeviceValid( pFilpData->mpDev ) == false)
    {
       DBG( "Invalid device! Updating f_ops\n" );
-      pFilp->f_op = pFilp->f_dentry->d_inode->i_fop;
+      pFilp->f_op = pFilp->f_path.dentry->d_inode->i_fop;
       return -ENXIO;
    }
 
@@ -2755,7 +2755,7 @@ int UserspaceClose(
    if (IsDeviceValid( pFilpData->mpDev ) == false)
    {
       DBG( "Invalid device! Updating f_ops\n" );
-      pFilp->f_op = pFilp->f_dentry->d_inode->i_fop;
+      pFilp->f_op = pFilp->f_path.dentry->d_inode->i_fop;
       return -ENXIO;
    }
 
@@ -2813,7 +2813,7 @@ ssize_t UserspaceRead(
    if (IsDeviceValid( pFilpData->mpDev ) == false)
    {
       DBG( "Invalid device! Updating f_ops\n" );
-      pFilp->f_op = pFilp->f_dentry->d_inode->i_fop;
+      pFilp->f_op = pFilp->f_path.dentry->d_inode->i_fop;
       return -ENXIO;
    }
 
@@ -2896,7 +2896,7 @@ ssize_t UserspaceWrite(
    if (IsDeviceValid( pFilpData->mpDev ) == false)
    {
       DBG( "Invalid device! Updating f_ops\n" );
-      pFilp->f_op = pFilp->f_dentry->d_inode->i_fop;
+      pFilp->f_op = pFilp->f_path.dentry->d_inode->i_fop;
       return -ENXIO;
    }
 
@@ -2974,7 +2974,7 @@ unsigned int UserspacePoll(
    if (IsDeviceValid( pFilpData->mpDev ) == false)
    {
       DBG( "Invalid device! Updating f_ops\n" );
-      pFilp->f_op = pFilp->f_dentry->d_inode->i_fop;
+      pFilp->f_op = pFilp->f_path.dentry->d_inode->i_fop;
       return POLLERR;
    }
 
@@ -3361,9 +3361,9 @@ void DeregisterQMIDevice( sGobiUSBNet * pDev )
             for (count = 0; count < pFDT->max_fds; count++)
             {
                pFilp = pFDT->fd[count];
-               if (pFilp != NULL &&  pFilp->f_dentry != NULL)
+               if (pFilp != NULL &&  pFilp->f_path.dentry != NULL)
                {
-                  if (pFilp->f_dentry->d_inode == pOpenInode)
+                  if (pFilp->f_path.dentry->d_inode == pOpenInode)
                   {
                      // Close this file handle
                      rcu_assign_pointer( pFDT->fd[count], NULL );
